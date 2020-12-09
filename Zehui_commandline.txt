@@ -1,0 +1,56 @@
+PDFS
+:~/sc15/sc15-graphs/sc15-graph/graph/bench$ 
+
+生成数据
+./graphfile.elision2 -generator tree -bits 64 -proc 1 -outfile ~/sc15/sc15-graphs/sc15-graph/graph/bench/_dat/_da/tree.adj_bin -nb_edges_target 4000000
+
+
+转换数据
+./graphfile.elision2 -infile com-orkut.snap -outfile _data/orkut.adj_bin -bits 64
+./graphfile.elision2 -infile _data/toy.snap -outfile _data/toy.adj_bin -bits 64
+
+ ./graphfile.elision2 -infile /home/zehui/DFS/com-lj.ungraph.snap -outfile _data/com-lj.ungraph.adj_bin -bits 64
+
+
+测试
+./search.opt2 -load from_file -infile _data/tree.adj_bin -bits 64 -source 0 -idempotent 1 -proc 40 -algo our_pbfs -our_pbfs_cutoff 1024
+
+orkut not work
+./search.elision2 -proc 0 -algo dfs_by_vertexid_array -should_pdfs_permute 0 -load from_file -infile _data/orkut.adj_bin -bits 32 -source 1
+
+测试orkut    work!
+./search.elision2 -proc 0 -algo dfs_by_vertexid_array -should_pdfs_permute 0 -load from_file -infile _data/orkut.adj_bin -bits 32 -source 1      // 0.6
+./search.elision2 -proc 0 -algo bfs_by_frontier_segment -should_pdfs_permute 0 -load from_file -infile _data/orkut.adj_bin -bits 32 -source 1  //0.7
+
+./search.elision2 -proc 0 -algo dfs_by_vertexid_array_P  -should_pdfs_permute 0 -load from_file -infile _data/toy.adj_bin  -bits 64 -source 1
+
+./Zehui_graphTes.topt -proc 0 -algo dfs_by_vertexid_array_P  -should_pdfs_permute 0 -load from_file -infile _data/toy.adj_bin  -bits 64 -source 0
+
+./Zehui_graphTes.topt -proc 0 -algo dfs_by_vertexid_array  -should_pdfs_permute 0 -load from_file -infile _data/soc-LiveJournal1.adj_bin   -bits 64 -source 0
+
+./Zehui_graphTes.topt -proc 0 -algo dfs_by_vertexid_array  -bits 64 -source 0  -should_pdfs_permute 0 -load from_file -infile _data/   
+example: 
+./_build/opt/compile.sh -o _build/opt/example_copy.o -c ./example_copy.cpp
+=================
+g++ -std=gnu++1y -DNDEBUG -O2 -fno-optimize-sibling-calls -DDISABLE_INTERRUPTS -DSTATS_IDLE -DDISABLE_CONG_PSEUDODFS -D_GNU_SOURCE -Wfatal-errors -m64 -DTARGET_X86_64 -DTARGET_LINUX -lm -pthread -DHAVE_GCC_TLS -I . -I ../tools/build//../../sequtil -I ../tools/build//../../parutil -I ../tools/build//../../sched -I ../tools/build//../../tools/pbbs -I ../tools/build//../../tools/malloc_count -I ../tools/build//../../tools/quickcheck -I _build/opt $* _build/opt/example_copy.o _build/opt/cmdline.o _build/opt/threaddag.o _build/opt/callback.o _build/opt/atomic.o _build/opt/machine.o _build/opt/worker.o _build/opt/logging.o _build/opt/stats.o _build/opt/microtime.o _build/opt/ticks.o _build/opt/scheduler.o _build/opt/messagestrategy.o _build/opt/instrategy.o _build/opt/estimator.o _build/opt/outstrategy.o _build/opt/workstealing.o _build/opt/native.o -o example_copy.opt
+
+=================
+编译 Zehui_graphTes    work!
+./_build/opt/compile.sh -o _build/opt/Zehui_graphTest.o -c ./Zehui_graphTest.cpp
+./_build/opt/compile.sh -o _build/opt/tests.o -c ./tests.cpp
+
+g++ -std=gnu++1y -DNDEBUG -O2 -fno-optimize-sibling-calls -DDISABLE_INTERRUPTS -DSTATS_IDLE -DDISABLE_CONG_PSEUDODFS -D_GNU_SOURCE -Wfatal-errors -m64 -DTARGET_X86_64 -DTARGET_LINUX -lm -pthread -DHAVE_GCC_TLS -I . -I ../tools/build//../../sequtil -I ../tools/build//../../parutil -I ../tools/build//../../sched -I ../tools/build//../../tools/pbbs -I ../tools/build//../../tools/malloc_count -I ../tools/build//../../tools/quickcheck -I _build/opt $* _build/opt/Zehui_graphTest.o _build/opt/cmdline.o _build/opt/threaddag.o _build/opt/callback.o _build/opt/atomic.o _build/opt/machine.o _build/opt/worker.o _build/opt/logging.o _build/opt/stats.o _build/opt/microtime.o _build/opt/ticks.o _build/opt/scheduler.o _build/opt/messagestrategy.o _build/opt/instrategy.o _build/opt/estimator.o _build/opt/outstrategy.o _build/opt/workstealing.o _build/opt/native.o -o Zehui_graphTes.topt
+
+ work!
+g++ -std=gnu++1y -DNDEBUG -O2 -fno-optimize-sibling-calls -DDISABLE_INTERRUPTS -DSTATS_IDLE -DDISABLE_CONG_PSEUDODFS -D_GNU_SOURCE -Wfatal-errors -m64 -DTARGET_X86_64 -DTARGET_LINUX -lm -pthread -DHAVE_GCC_TLS -I . -I ../tools/build//../../sequtil  -I ../tools/matrix_market -I ../tools/build//../../parutil -I ../tools/build//../../sched -I ../tools/build//../../tools/pbbs -I ../tools/build//../../tools/malloc_count -I ../tools/build//../../tools/quickcheck -I _build/opt $* _build/opt/Zehui_graphTest.o _build/opt/cmdline.o _build/opt/threaddag.o _build/opt/callback.o _build/opt/atomic.o _build/opt/machine.o _build/opt/worker.o _build/opt/logging.o _build/opt/stats.o _build/opt/microtime.o _build/opt/ticks.o _build/opt/scheduler.o _build/opt/messagestrategy.o _build/opt/instrategy.o _build/opt/estimator.o _build/opt/outstrategy.o _build/opt/workstealing.o _build/opt/native.o -o Zehui_graphTes.topt
+
+ work!
+./_build/opt/compile.sh -o _build/opt/tests.o -c ./tests.cpp
+g++ -std=gnu++1y -DNDEBUG -O2 -fno-optimize-sibling-calls -DDISABLE_INTERRUPTS -DSTATS_IDLE -DDISABLE_CONG_PSEUDODFS -D_GNU_SOURCE -Wfatal-errors -m64 -DTARGET_X86_64 -DTARGET_LINUX -lm -pthread -DHAVE_GCC_TLS -I . -I ../tools/build//../../sequtil  -I ../tools/matrix_market -I ../tools/build//../../parutil -I ../tools/build//../../sched -I ../tools/build//../../tools/pbbs -I ../tools/build//../../tools/malloc_count -I ../tools/build//../../tools/quickcheck -I _build/opt $* _build/opt/tests.o _build/opt/cmdline.o _build/opt/threaddag.o _build/opt/callback.o _build/opt/atomic.o _build/opt/machine.o _build/opt/worker.o _build/opt/logging.o _build/opt/stats.o _build/opt/microtime.o _build/opt/ticks.o _build/opt/scheduler.o _build/opt/messagestrategy.o _build/opt/instrategy.o _build/opt/estimator.o _build/opt/outstrategy.o _build/opt/workstealing.o _build/opt/native.o -o tests.topt
+
+
+search_benchmark_select_parallelism{
+  search_benchmark_sequential_select_algo{
+    bfs_by_dual_arrays
+  }
+}
